@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2009 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2009-2012 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS Devel strace */
 /* strace is not free software; you can redistribute it and/or modify it under
  * the terms of the Creative Commons Attribution-NonCommercial-ShareAlike 3.0
@@ -20,6 +20,8 @@
 # define STRACE_NETBSD_H
 
 # ifdef __NetBSD__
+#  include <sys/types.h>
+#  include <sys/ptrace.h>
 #  include <sys/syscall.h>
 #  include <machine/reg.h>
 

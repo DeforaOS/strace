@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2009 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2009-2012 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS Devel strace */
 /* strace is not free software; you can redistribute it and/or modify it under
  * the terms of the Creative Commons Attribution-NonCommercial-ShareAlike 3.0
@@ -17,11 +17,12 @@
 
 
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <sys/ptrace.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
+#include "freebsd.h"
 #include "linux.h"
 #include "netbsd.h"
 
@@ -68,7 +69,7 @@ static int _strace_parent(pid_t pid)
 static int _handle(pid_t pid, int status)
 {
 	struct user context;
-	int size = sizeof(stracecall) / 4;
+	int size = sizeof(stracecall) / sizeof(*stracecall);
 
 	if(!WIFSTOPPED(status))
 		return -1;

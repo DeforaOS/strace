@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2009-2012 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2012 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS Devel strace */
 /* strace is not free software; you can redistribute it and/or modify it under
  * the terms of the Creative Commons Attribution-NonCommercial-ShareAlike 3.0
@@ -16,34 +16,36 @@
 
 
 
-#include <stddef.h>
-#include "netbsd.h"
+#ifndef STRACE_FREEBSD_H
+# define STRACE_FREEBSD_H
+
+# ifdef __FreeBSD__
+#  include <sys/ptrace.h>
 
 
-#ifdef __NetBSD__
-/* variables */
-char const * stracecall[] =
+/* types */
+typedef long ptrace_data_t; /* XXX really is int */
+struct user
 {
-	NULL,
-	"exit",
-	"fork",
-	"read",
-	"write",
-	"open",
-	"close",
-	"wait4",
-	"oldcreat",
-	"link",
-	"unlink",
-	"oldexecv",
-	"chdir",
-	"fchdir",
-	"mknod",
-	"chmod",
-	"chown",
-	"break",
-	NULL,
-	"oldlseek",
-	"getpid"
+	struct reg regs;
 };
-#endif /* __NetBSD__ */
+
+
+/* constants */
+#  define PTRACE_CONT		PT_CONTINUE
+#  define PTRACE_GETREGS	PT_GETREGS
+#  define PTRACE_SYSCALL	PT_SYSCALL
+#  define PTRACE_TRACEME	PT_TRACE_ME
+
+#  if defined(__amd64__)
+#   define orig_eax		r_rax
+#  elif defined(__i386__)
+#   define orig_eax		r_eax
+#  endif
+
+
+/* variables */
+extern char const * stracecall[SYS_getpid + 1];
+# endif /* __FreeBSD__ */
+
+#endif /* !STRACE_FREEBSD_H */
