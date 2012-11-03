@@ -34,11 +34,6 @@ struct user
 
 
 /* constants */
-#  define PTRACE_CONT		PT_CONTINUE
-#  define PTRACE_GETREGS	PT_GETREGS
-#  define PTRACE_SYSCALL	PT_SYSCALL
-#  define PTRACE_TRACEME	PT_TRACE_ME
-
 #  if defined(__amd64__)
 #   define _REG32_EAX		11 /* XXX or #define _KERNEL */
 #   define orig_eax		regs[_REG32_EAX]

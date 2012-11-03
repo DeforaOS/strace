@@ -38,7 +38,7 @@ static int _strace(char * argv[])
 		return _strace_error("fork", 1);
 	if(pid == 0)
 	{
-		ptrace(PTRACE_TRACEME, -1, NULL, (ptrace_data_t)NULL);
+		ptrace(PT_TRACE_ME, -1, NULL, (ptrace_data_t)NULL);
 		execvp(argv[0], argv);
 		return _strace_error(argv[0], 1);
 	}
@@ -75,19 +75,19 @@ static int _handle(pid_t pid, int status)
 	switch(WSTOPSIG(status))
 	{
 		case SIGTRAP:
-			ptrace(PTRACE_GETREGS, pid, NULL,
+			ptrace(PT_GETREGS, pid, NULL,
 					(ptrace_data_t)&context);
 			if(size >= context.regs.orig_eax)
 				fprintf(stderr, "%s();\n", stracecall[
 						context.regs.orig_eax - 1]);
 			else
 				fprintf(stderr, "%ld\n", context.regs.orig_eax);
-			ptrace(PTRACE_SYSCALL, pid, NULL, (ptrace_data_t)NULL);
+			ptrace(PT_SYSCALL, pid, NULL, (ptrace_data_t)NULL);
 			wait(0);
-			ptrace(PTRACE_SYSCALL, pid, NULL, (ptrace_data_t)NULL);
+			ptrace(PT_SYSCALL, pid, NULL, (ptrace_data_t)NULL);
 			break;
 		default:
-			ptrace(PTRACE_CONT, pid, NULL, WSTOPSIG(status));
+			ptrace(PT_CONTINUE, pid, NULL, WSTOPSIG(status));
 			break;
 	}
 	return 0;

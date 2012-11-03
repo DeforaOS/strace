@@ -31,11 +31,6 @@ struct user
 
 
 /* constants */
-#  define PTRACE_CONT		PT_CONTINUE
-#  define PTRACE_GETREGS	PT_GETREGS
-#  define PTRACE_SYSCALL	PT_SYSCALL
-#  define PTRACE_TRACEME	PT_TRACE_ME
-
 #  if defined(__amd64__)
 #   define orig_eax		r_rax
 #  elif defined(__i386__)
