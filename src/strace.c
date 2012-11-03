@@ -34,6 +34,9 @@ static int _strace(char * argv[])
 {
 	pid_t pid;
 
+#ifdef DEBUG
+	fprintf(stderr, "DEBUG: %s(\"%s\")\n", __func__, argv[0]);
+#endif
 	if((pid = fork()) == -1)
 		return _strace_error("fork", 1);
 	if(pid == 0)
@@ -77,9 +80,10 @@ static int _handle(pid_t pid, int status)
 		case SIGTRAP:
 			ptrace(PT_GETREGS, pid, NULL,
 					(ptrace_data_t)&context);
-			if(size >= context.regs.orig_eax)
+			if(context.regs.orig_eax >= 0
+					&& context.regs.orig_eax < size)
 				fprintf(stderr, "%s();\n", stracecall[
-						context.regs.orig_eax - 1]);
+						context.regs.orig_eax]);
 			else
 				fprintf(stderr, "%ld\n", context.regs.orig_eax);
 			ptrace(PT_SYSCALL, pid, NULL, (ptrace_data_t)NULL);
@@ -105,7 +109,15 @@ static int _usage(void)
 /* main */
 int main(int argc, char * argv[])
 {
-	if(argc <= 1)
+	int o;
+
+	while((o = getopt(argc, argv, "")) != -1)
+		switch(o)
+		{
+			default:
+				return _usage();
+		}
+	if(argc - optind <= 1)
 		return _usage();
-	return (_strace(&argv[1]) == 0) ? 0 : 2;
+	return (_strace(&argv[optind]) == 0) ? 0 : 2;
 }

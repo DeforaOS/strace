@@ -23,7 +23,7 @@
 /* variables */
 char const * stracecall[] =
 {
-	NULL,
+	"syscall",
 	"exit",
 	"fork",
 	"read",
