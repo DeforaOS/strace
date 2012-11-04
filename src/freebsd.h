@@ -23,7 +23,7 @@
 
 
 /* types */
-typedef long ptrace_data_t; /* XXX really is int */
+typedef int ptrace_data_t;
 struct user
 {
 	struct reg regs;
@@ -33,6 +33,9 @@ struct user
 /* constants */
 #  if defined(__amd64__)
 #   define orig_eax		r_rax
+#   define orig_ebx		r_rbx
+#   define orig_ecx		r_rcx
+#   define orig_edx		r_rdx
 #  elif defined(__i386__)
 #   define orig_eax		r_eax
 #  endif

@@ -36,6 +36,9 @@ struct user
 /* constants */
 #  if defined(__amd64__)
 #   define orig_rax		regs[_REG_RAX]
+#   define orig_rbx		regs[_REG_RBX]
+#   define orig_rcx		regs[_REG_RCX]
+#   define orig_rdx		regs[_REG_RDX]
 #  elif defined(__i386__)
 #   define orig_eax		r_eax
 #  endif

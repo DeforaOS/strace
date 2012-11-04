@@ -119,7 +119,7 @@ static void _handle_trap_before(pid_t pid)
 	struct user context;
 	int size = sizeof(stracecall) / sizeof(*stracecall);
 
-	ptrace(PT_GETREGS, pid, &context, 0);
+	ptrace(PT_GETREGS, pid, &context.regs, 0);
 #ifdef DEBUG
 	_strace_regs_print(&context.regs);
 #endif
@@ -140,7 +140,7 @@ static void _handle_trap_after(pid_t pid)
 {
 	struct user context;
 
-	ptrace(PT_GETREGS, pid, &context, 0);
+	ptrace(PT_GETREGS, pid, &context.regs, 0);
 #ifdef DEBUG
 	_strace_regs_print(&context.regs);
 #endif
@@ -158,6 +158,9 @@ static void _strace_regs_print(struct reg * regs)
 {
 #if defined(__amd64__)
 	fprintf(stderr, "rax: 0x%016lx\n", regs->orig_rax);
+	fprintf(stderr, "rcx: 0x%016lx\n", regs->orig_rcx);
+	fprintf(stderr, "rdx: 0x%016lx\n", regs->orig_rdx);
+	fprintf(stderr, "rbx: 0x%016lx\n", regs->orig_rbx);
 #endif
 }
 #endif

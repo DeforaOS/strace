@@ -21,7 +21,7 @@
 
 #ifdef __NetBSD__
 /* variables */
-char const * stracecall[] =
+char const * stracecall[SYS_getpid + 1] =
 {
 	"syscall",
 	"exit",
@@ -41,7 +41,7 @@ char const * stracecall[] =
 	"chmod",
 	"chown",
 	"break",
-	NULL,
+	"oldgetfsstat",
 	"oldlseek",
 	"getpid"
 };

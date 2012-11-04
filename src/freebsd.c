@@ -21,7 +21,7 @@
 
 #ifdef __FreeBSD__
 /* variables */
-char const * stracecall[] =
+char const * stracecall[SYS_getpid + 1] =
 {
 	NULL,
 	"exit",
