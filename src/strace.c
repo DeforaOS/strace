@@ -119,7 +119,11 @@ static void _handle_trap_before(pid_t pid)
 	struct user context;
 	int size = sizeof(stracecall) / sizeof(*stracecall);
 
+#ifdef __linux__
+	ptrace(PT_GETREGS, pid, NULL, &context.regs);
+#else
 	ptrace(PT_GETREGS, pid, &context.regs, 0);
+#endif
 #ifdef DEBUG
 	_strace_regs_print(&context.regs);
 #endif
@@ -140,7 +144,11 @@ static void _handle_trap_after(pid_t pid)
 {
 	struct user context;
 
+#ifdef __linux__
+	ptrace(PT_GETREGS, pid, NULL, &context.regs);
+#else
 	ptrace(PT_GETREGS, pid, &context.regs, 0);
+#endif
 #ifdef DEBUG
 	_strace_regs_print(&context.regs);
 #endif
