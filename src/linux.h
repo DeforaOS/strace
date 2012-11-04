@@ -19,7 +19,7 @@
 # define STRACE_LINUX_H
 
 # ifdef __linux__
-#  include <linux/user.h>
+#  include <sys/user.h>
 #  include <asm/unistd.h>
 
 
