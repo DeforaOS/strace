@@ -27,9 +27,22 @@
 
 
 /* strace */
+/* private */
+/* prototypes */
+static int _strace(char * argv[]);
+
 static int _strace_error(char const * message, int ret);
 static int _strace_parent(pid_t pid);
 
+static int _strace_handle(pid_t pid, int res);
+
+#ifdef DEBUG
+static void _strace_regs_print(struct reg * regs);
+#endif
+
+
+/* functions */
+/* strace */
 static int _strace(char * argv[])
 {
 	pid_t pid;
@@ -41,13 +54,16 @@ static int _strace(char * argv[])
 		return _strace_error("fork", 1);
 	if(pid == 0)
 	{
-		ptrace(PT_TRACE_ME, -1, NULL, (ptrace_data_t)NULL);
+		/* child */
+		ptrace(PT_TRACE_ME, -1, NULL, (ptrace_data_t)0);
 		execvp(argv[0], argv);
 		return _strace_error(argv[0], 1);
 	}
 	return _strace_parent(pid);
 }
 
+
+/* strace_error */
 static int _strace_error(char const * message, int ret)
 {
 	fputs("strace: ", stderr);
@@ -55,47 +71,96 @@ static int _strace_error(char const * message, int ret)
 	return ret;
 }
 
-static int _handle(pid_t pid, int res);
+
+/* strace_parent */
 static int _strace_parent(pid_t pid)
 {
 	int status;
 
 	for(;;)
 	{
-		waitpid(pid, &status, 0);
-		if(_handle(pid, status) != 0)
+		if(waitpid(pid, &status, 0) == -1)
+			return -_strace_error("waitpid", 1);
+		if(_strace_handle(pid, status) != 0)
 			return 0;
 	}
 }
 
-static int _handle(pid_t pid, int status)
-{
-	struct user context;
-	int size = sizeof(stracecall) / sizeof(*stracecall);
 
+/* strace_handle */
+static void _handle_trap_before(pid_t pid);
+static void _handle_trap_after(pid_t pid);
+
+static int _strace_handle(pid_t pid, int status)
+{
 	if(!WIFSTOPPED(status))
 		return -1;
 	switch(WSTOPSIG(status))
 	{
 		case SIGTRAP:
-			ptrace(PT_GETREGS, pid, NULL,
-					(ptrace_data_t)&context);
-			if(context.regs.orig_eax >= 0
-					&& context.regs.orig_eax < size)
-				fprintf(stderr, "%s();\n", stracecall[
-						context.regs.orig_eax]);
-			else
-				fprintf(stderr, "%ld\n", context.regs.orig_eax);
-			ptrace(PT_SYSCALL, pid, NULL, (ptrace_data_t)NULL);
-			wait(0);
-			ptrace(PT_SYSCALL, pid, NULL, (ptrace_data_t)NULL);
+			/* examine the system call */
+			_handle_trap_before(pid);
+			/* execute the system call */
+			ptrace(PT_SYSCALL, pid, (caddr_t)1, (ptrace_data_t)0);
+			/* examine the return value and data */
+			_handle_trap_after(pid);
+			/* wait until the next syscall */
+			ptrace(PT_SYSCALL, pid, (caddr_t)1, (ptrace_data_t)0);
 			break;
 		default:
-			ptrace(PT_CONTINUE, pid, NULL, WSTOPSIG(status));
+			ptrace(PT_CONTINUE, pid, (caddr_t)1, WSTOPSIG(status));
 			break;
 	}
 	return 0;
 }
+
+static void _handle_trap_before(pid_t pid)
+{
+	struct user context;
+	int size = sizeof(stracecall) / sizeof(*stracecall);
+
+	ptrace(PT_GETREGS, pid, &context, 0);
+#ifdef DEBUG
+	_strace_regs_print(&context.regs);
+#endif
+#if defined(__amd64__)
+	if(context.regs.orig_rax >= 0 && context.regs.orig_rax < size)
+		fprintf(stderr, "%s();", stracecall[context.regs.orig_rax]);
+	else
+		fprintf(stderr, "%ld", context.regs.orig_rax);
+#elif defined(__i386__)
+	if(context.regs.orig_eax >= 0 && context.regs.orig_eax < size)
+		fprintf(stderr, "%s();", stracecall[context.regs.orig_eax]);
+	else
+		fprintf(stderr, "%ld", context.regs.orig_eax);
+#endif
+}
+
+static void _handle_trap_after(pid_t pid)
+{
+	struct user context;
+
+	ptrace(PT_GETREGS, pid, &context, 0);
+#ifdef DEBUG
+	_strace_regs_print(&context.regs);
+#endif
+#if defined(__amd64__)
+	fprintf(stderr, " => %ld\n", context.regs.orig_rax);
+#elif defined(__i386__)
+	fprintf(stderr, " => %ld\n", context.regs.orig_eax);
+#endif
+}
+
+
+#ifdef DEBUG
+/* strace_regs_print */
+static void _strace_regs_print(struct reg * regs)
+{
+#if defined(__amd64__)
+	fprintf(stderr, "rax: 0x%016lx\n", regs->orig_rax);
+#endif
+}
+#endif
 
 
 /* usage */
@@ -117,7 +182,7 @@ int main(int argc, char * argv[])
 			default:
 				return _usage();
 		}
-	if(argc - optind <= 1)
+	if(argc - optind < 1)
 		return _usage();
 	return (_strace(&argv[optind]) == 0) ? 0 : 2;
 }
