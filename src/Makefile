@@ -43,7 +43,7 @@ distclean: clean
 
 install: $(TARGETS)
 	$(MKDIR) $(DESTDIR)$(BINDIR)
-	$(INSTALL) -m 0755 -- strace $(DESTDIR)$(BINDIR)/strace
+	$(INSTALL) -m 0755 strace $(DESTDIR)$(BINDIR)/strace
 
 uninstall:
 	$(RM) -- $(DESTDIR)$(BINDIR)/strace
