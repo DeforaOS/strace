@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2009-2012 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2009-2014 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS Devel strace */
 /* This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -164,12 +164,12 @@ static void _handle_trap_after(pid_t pid)
 /* strace_regs_print */
 static void _strace_regs_print(struct reg * regs)
 {
-#if defined(__amd64__)
+# if defined(__amd64__)
 	fprintf(stderr, "rax: 0x%016lx\n", regs->orig_rax);
 	fprintf(stderr, "rcx: 0x%016lx\n", regs->orig_rcx);
 	fprintf(stderr, "rdx: 0x%016lx\n", regs->orig_rdx);
 	fprintf(stderr, "rbx: 0x%016lx\n", regs->orig_rbx);
-#endif
+# endif
 }
 #endif
 
