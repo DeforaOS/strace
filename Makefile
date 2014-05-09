@@ -25,10 +25,12 @@ dist:
 		$(PACKAGE)-$(VERSION)/src/linux.c \
 		$(PACKAGE)-$(VERSION)/src/netbsd.c \
 		$(PACKAGE)-$(VERSION)/src/strace.c \
+		$(PACKAGE)-$(VERSION)/src/main.c \
 		$(PACKAGE)-$(VERSION)/src/Makefile \
 		$(PACKAGE)-$(VERSION)/src/freebsd.h \
 		$(PACKAGE)-$(VERSION)/src/linux.h \
 		$(PACKAGE)-$(VERSION)/src/netbsd.h \
+		$(PACKAGE)-$(VERSION)/src/strace.h \
 		$(PACKAGE)-$(VERSION)/src/project.conf \
 		$(PACKAGE)-$(VERSION)/Makefile \
 		$(PACKAGE)-$(VERSION)/COPYING \

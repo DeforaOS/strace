@@ -29,8 +29,6 @@
 /* strace */
 /* private */
 /* prototypes */
-static int _strace(char * argv[]);
-
 static int _strace_error(char const * message, int ret);
 static int _strace_parent(pid_t pid);
 
@@ -41,9 +39,10 @@ static void _strace_regs_print(struct reg * regs);
 #endif
 
 
+/* public */
 /* functions */
 /* strace */
-static int _strace(char * argv[])
+int strace(char * argv[])
 {
 	pid_t pid;
 
@@ -63,6 +62,8 @@ static int _strace(char * argv[])
 }
 
 
+/* private */
+/* functions */
 /* strace_error */
 static int _strace_error(char const * message, int ret)
 {
@@ -172,28 +173,3 @@ static void _strace_regs_print(struct reg * regs)
 # endif
 }
 #endif
-
-
-/* usage */
-static int _usage(void)
-{
-	fputs("Usage: strace program [argument...]\n", stderr);
-	return 1;
-}
-
-
-/* main */
-int main(int argc, char * argv[])
-{
-	int o;
-
-	while((o = getopt(argc, argv, "")) != -1)
-		switch(o)
-		{
-			default:
-				return _usage();
-		}
-	if(argc - optind < 1)
-		return _usage();
-	return (_strace(&argv[optind]) == 0) ? 0 : 2;
-}
