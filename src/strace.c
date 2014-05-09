@@ -24,6 +24,12 @@
 #include "freebsd.h"
 #include "linux.h"
 #include "netbsd.h"
+#include "strace.h"
+#include "../config.h"
+
+#ifndef PROGNAME
+# define PROGNAME PACKAGE
+#endif
 
 
 /* strace */
@@ -67,7 +73,7 @@ int strace(char * argv[])
 /* strace_error */
 static int _strace_error(char const * message, int ret)
 {
-	fputs("strace: ", stderr);
+	fputs(PROGNAME ": ", stderr);
 	perror(message);
 	return ret;
 }

@@ -18,6 +18,11 @@
 #include <unistd.h>
 #include <stdio.h>
 #include "strace.h"
+#include "../config.h"
+
+#ifndef PROGNAME
+# define PROGNAME PACKAGE
+#endif
 
 
 /* strace */
@@ -30,7 +35,7 @@ static int _usage(void);
 /* usage */
 static int _usage(void)
 {
-	fputs("Usage: strace program [argument...]\n", stderr);
+	fputs("Usage: " PROGNAME " program [argument...]\n", stderr);
 	return 1;
 }
 
