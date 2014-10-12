@@ -32,10 +32,10 @@ linux.o: linux.c linux.h
 netbsd.o: netbsd.c netbsd.h
 	$(CC) $(strace_CFLAGS) -c netbsd.c
 
-strace.o: strace.c freebsd.h linux.h netbsd.h strace.h
+strace.o: strace.c freebsd.h linux.h netbsd.h strace.h ../config.h
 	$(CC) $(strace_CFLAGS) -c strace.c
 
-main.o: main.c strace.h
+main.o: main.c strace.h ../config.h
 	$(CC) $(strace_CFLAGS) -c main.c
 
 clean:
