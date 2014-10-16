@@ -16,23 +16,23 @@ INSTALL	= install
 
 all: $(TARGETS)
 
-strace_OBJS = freebsd.o linux.o netbsd.o strace.o main.o
+strace_OBJS = platform/freebsd.o platform/linux.o platform/netbsd.o strace.o main.o
 strace_CFLAGS = $(CPPFLAGSF) $(CPPFLAGS) $(CFLAGSF) $(CFLAGS)
 strace_LDFLAGS = $(LDFLAGSF) $(LDFLAGS)
 
 strace: $(strace_OBJS)
 	$(CC) -o strace $(strace_OBJS) $(strace_LDFLAGS)
 
-freebsd.o: freebsd.c
-	$(CC) $(strace_CFLAGS) -c freebsd.c
+platform/freebsd.o: platform/freebsd.c platform/freebsd.h platform.h
+	$(CC) $(strace_CFLAGS) -o platform/freebsd.o -c platform/freebsd.c
 
-linux.o: linux.c linux.h
-	$(CC) $(strace_CFLAGS) -c linux.c
+platform/linux.o: platform/linux.c platform/linux.h platform.h
+	$(CC) $(strace_CFLAGS) -o platform/linux.o -c platform/linux.c
 
-netbsd.o: netbsd.c netbsd.h
-	$(CC) $(strace_CFLAGS) -c netbsd.c
+platform/netbsd.o: platform/netbsd.c platform/netbsd.h platform.h
+	$(CC) $(strace_CFLAGS) -o platform/netbsd.o -c platform/netbsd.c
 
-strace.o: strace.c freebsd.h linux.h netbsd.h strace.h ../config.h
+strace.o: strace.c platform.h strace.h ../config.h
 	$(CC) $(strace_CFLAGS) -c strace.c
 
 main.o: main.c strace.h ../config.h

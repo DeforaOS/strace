@@ -21,15 +21,16 @@ dist:
 	$(RM) -r -- $(PACKAGE)-$(VERSION)
 	$(LN) -s -- . $(PACKAGE)-$(VERSION)
 	@$(TAR) $(PACKAGE)-$(VERSION).tar.gz -- \
-		$(PACKAGE)-$(VERSION)/src/freebsd.c \
-		$(PACKAGE)-$(VERSION)/src/linux.c \
-		$(PACKAGE)-$(VERSION)/src/netbsd.c \
+		$(PACKAGE)-$(VERSION)/src/platform/freebsd.c \
+		$(PACKAGE)-$(VERSION)/src/platform/linux.c \
+		$(PACKAGE)-$(VERSION)/src/platform/netbsd.c \
 		$(PACKAGE)-$(VERSION)/src/strace.c \
 		$(PACKAGE)-$(VERSION)/src/main.c \
 		$(PACKAGE)-$(VERSION)/src/Makefile \
-		$(PACKAGE)-$(VERSION)/src/freebsd.h \
-		$(PACKAGE)-$(VERSION)/src/linux.h \
-		$(PACKAGE)-$(VERSION)/src/netbsd.h \
+		$(PACKAGE)-$(VERSION)/src/platform.h \
+		$(PACKAGE)-$(VERSION)/src/platform/freebsd.h \
+		$(PACKAGE)-$(VERSION)/src/platform/linux.h \
+		$(PACKAGE)-$(VERSION)/src/platform/netbsd.h \
 		$(PACKAGE)-$(VERSION)/src/strace.h \
 		$(PACKAGE)-$(VERSION)/src/project.conf \
 		$(PACKAGE)-$(VERSION)/Makefile \

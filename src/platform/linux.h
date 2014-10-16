@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2009-2012 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2009-2014 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS Devel strace */
 /* This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,33 +15,17 @@
 
 
 
-#include <stddef.h>
-#include "linux.h"
+#ifndef STRACE_LINUX_H
+# define STRACE_LINUX_H
+
+# if defined(__linux__)
+#  include <sys/user.h>
+#  include <asm/unistd.h>
 
 
-#ifdef __linux__
-/* variables */
-char const * stracecall[] =
-{
-	"exit",
-	"fork",
-	"read",
-	"write",
-	"open",
-	"close",
-	"waitpid",
-	"creat",
-	"link",
-	"unlink",
-	"execve",
-	"chdir",
-	"time",
-	"mknod",
-	"chmod",
-	"lchown",
-	"break",
-	"oldstat",
-	"lseek",
-	"getpid"
-};
-#endif /* __linux__ */
+/* types */
+typedef void * ptrace_data_t;
+
+
+# endif /* __linux__ */
+#endif /* !STRACE_LINUX_H */

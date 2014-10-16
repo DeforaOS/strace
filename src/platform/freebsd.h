@@ -1,5 +1,5 @@
 /* $Id$ */
-/* Copyright (c) 2009-2012 Pierre Pronchery <khorben@defora.org> */
+/* Copyright (c) 2012-2014 Pierre Pronchery <khorben@defora.org> */
 /* This file is part of DeforaOS Devel strace */
 /* This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,14 +15,11 @@
 
 
 
-#ifndef STRACE_NETBSD_H
-# define STRACE_NETBSD_H
+#ifndef STRACE_FREEBSD_H
+# define STRACE_FREEBSD_H
 
-# ifdef __NetBSD__
-#  include <sys/types.h>
+# if defined(__FreeBSD__)
 #  include <sys/ptrace.h>
-#  include <sys/syscall.h>
-#  include <machine/reg.h>
 
 
 /* types */
@@ -35,17 +32,21 @@ struct user
 
 /* constants */
 #  if defined(__amd64__)
-#   define orig_rax		regs[_REG_RAX]
-#   define orig_rbx		regs[_REG_RBX]
-#   define orig_rcx		regs[_REG_RCX]
-#   define orig_rdx		regs[_REG_RDX]
+#   define orig_rax		r_rax
+#   define orig_rcx		r_rcx
+#   define orig_rbx		r_rbx
+#   define orig_rdx		r_rdx
+#   define orig_rsi		r_rsi
+#   define orig_rdi		r_rdi
+#   define orig_r10		r_r10
 #  elif defined(__i386__)
 #   define orig_eax		r_eax
+#   define orig_ecx		r_ecx
+#   define orig_ebx		r_ebx
+#   define orig_edx		r_edx
+#   define orig_esi		r_esi
+#   define orig_edi		r_edi
 #  endif
 
-
-/* variables */
-extern char const * stracecall[SYS_getpid + 1];
-# endif /* __NetBSD__ */
-
-#endif /* !STRACE_NETBSD_H */
+# endif /* __FreeBSD__ */
+#endif /* !STRACE_FREEBSD_H */

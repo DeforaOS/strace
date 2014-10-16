@@ -21,9 +21,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
-#include "freebsd.h"
-#include "linux.h"
-#include "netbsd.h"
+#include "platform.h"
 #include "strace.h"
 #include "../config.h"
 
@@ -39,10 +37,6 @@ static int _strace_error(char const * message, int ret);
 static int _strace_parent(pid_t pid);
 
 static int _strace_handle(pid_t pid, int res);
-
-#ifdef DEBUG
-static void _strace_regs_print(struct reg * regs);
-#endif
 
 
 /* public */
@@ -124,58 +118,26 @@ static int _strace_handle(pid_t pid, int status)
 static void _handle_trap_before(pid_t pid)
 {
 	struct user context;
-	int size = sizeof(stracecall) / sizeof(*stracecall);
+	char const * syscall;
 
-#ifdef __linux__
-	ptrace(PT_GETREGS, pid, NULL, &context.regs);
-#else
-	ptrace(PT_GETREGS, pid, &context.regs, 0);
-#endif
+	platform_get_registers(pid, &context);
 #ifdef DEBUG
-	_strace_regs_print(&context.regs);
+	platform_print_registers(pid, &context);
 #endif
-#if defined(__amd64__)
-	if(context.regs.orig_rax >= 0 && context.regs.orig_rax < size)
-		fprintf(stderr, "%s();", stracecall[context.regs.orig_rax]);
-	else
-		fprintf(stderr, "%ld", context.regs.orig_rax);
-#elif defined(__i386__)
-	if(context.regs.orig_eax >= 0 && context.regs.orig_eax < size)
-		fprintf(stderr, "%s();", stracecall[context.regs.orig_eax]);
-	else
-		fprintf(stderr, "%ld", context.regs.orig_eax);
-#endif
+	if((syscall = platform_get_syscall(pid, &context)) == NULL)
+		syscall = "syscall";
+	fprintf(stderr, "%s()", syscall);
 }
 
 static void _handle_trap_after(pid_t pid)
 {
 	struct user context;
+	long res;
 
-#ifdef __linux__
-	ptrace(PT_GETREGS, pid, NULL, &context.regs);
-#else
-	ptrace(PT_GETREGS, pid, &context.regs, 0);
-#endif
+	platform_get_registers(pid, &context);
 #ifdef DEBUG
-	_strace_regs_print(&context.regs);
+	platform_print_registers(pid, &context);
 #endif
-#if defined(__amd64__)
-	fprintf(stderr, " => %ld\n", context.regs.orig_rax);
-#elif defined(__i386__)
-	fprintf(stderr, " => %ld\n", context.regs.orig_eax);
-#endif
+	res = platform_get_result(pid, &context);
+	fprintf(stderr, " => %ld\n", res);
 }
-
-
-#ifdef DEBUG
-/* strace_regs_print */
-static void _strace_regs_print(struct reg * regs)
-{
-# if defined(__amd64__)
-	fprintf(stderr, "rax: 0x%016lx\n", regs->orig_rax);
-	fprintf(stderr, "rcx: 0x%016lx\n", regs->orig_rcx);
-	fprintf(stderr, "rdx: 0x%016lx\n", regs->orig_rdx);
-	fprintf(stderr, "rbx: 0x%016lx\n", regs->orig_rbx);
-# endif
-}
-#endif
