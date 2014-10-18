@@ -16,7 +16,7 @@
 
 
 #include <stdio.h>
-#include "platform.h"
+#include "../platform.h"
 #include "linux.h"
 
 

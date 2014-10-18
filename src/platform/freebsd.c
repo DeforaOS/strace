@@ -16,6 +16,7 @@
 
 
 #include <stdio.h>
+#include "../platform.h"
 #include "freebsd.h"
 
 
