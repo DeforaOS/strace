@@ -34,7 +34,6 @@
 /* private */
 /* prototypes */
 static int _strace_error(char const * message, int ret);
-static int _strace_parent(pid_t pid);
 
 static int _strace_handle(pid_t pid, int res);
 
@@ -42,6 +41,9 @@ static int _strace_handle(pid_t pid, int res);
 /* public */
 /* functions */
 /* strace */
+static int _strace_child(char * argv[]);
+static int _strace_parent(pid_t pid);
+
 int strace(char * argv[])
 {
 	pid_t pid;
@@ -52,28 +54,20 @@ int strace(char * argv[])
 	if((pid = fork()) == -1)
 		return _strace_error("fork", 1);
 	if(pid == 0)
-	{
-		/* child */
-		ptrace(PT_TRACE_ME, -1, NULL, (ptrace_data_t)0);
-		execvp(argv[0], argv);
-		return _strace_error(argv[0], 1);
-	}
+		return _strace_child(argv);
 	return _strace_parent(pid);
 }
 
-
-/* private */
-/* functions */
-/* strace_error */
-static int _strace_error(char const * message, int ret)
+static int _strace_child(char * argv[])
 {
-	fputs(PROGNAME ": ", stderr);
-	perror(message);
-	return ret;
+	/* child */
+	ptrace(PT_TRACE_ME, -1, NULL, (ptrace_data_t)0);
+	execvp(argv[0], argv);
+	_strace_error(argv[0], 1);
+	_exit(127);
+	return 0;
 }
 
-
-/* strace_parent */
 static int _strace_parent(pid_t pid)
 {
 	int status;
@@ -85,6 +79,17 @@ static int _strace_parent(pid_t pid)
 		if(_strace_handle(pid, status) != 0)
 			return 0;
 	}
+}
+
+
+/* private */
+/* functions */
+/* strace_error */
+static int _strace_error(char const * message, int ret)
+{
+	fputs(PROGNAME ": ", stderr);
+	perror(message);
+	return ret;
 }
 
 
