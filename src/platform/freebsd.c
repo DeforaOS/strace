@@ -82,7 +82,7 @@ char const * platform_get_syscall(pid_t pid, struct user * context)
 {
 	const size_t size = sizeof(stracecall) / sizeof(*stracecall);
 	struct user c;
-	long res;
+	unsigned long res;
 	static char buf[32];
 
 	if(context == NULL)
@@ -98,14 +98,10 @@ char const * platform_get_syscall(pid_t pid, struct user * context)
 #else
 	res = -1;
 #endif
-	if(res >= 0 && (size_t)res < size && stracecall[res] != NULL)
+	if(res < size && stracecall[res] != NULL)
 		return stracecall[res];
-	if(res >= 0)
-	{
-		snprintf(buf, sizeof(buf), "%s%ld", "syscall_", res);
-		return buf;
-	}
-	return NULL;
+	snprintf(buf, sizeof(buf), "%s%lx", "syscall_", res);
+	return buf;
 }
 
 
