@@ -123,9 +123,9 @@ long platform_get_result(pid_t pid, struct user * context)
 		context = &c;
 	}
 #if defined(__amd64__)
-	return context->regs.orig_rax;
+	return context->regs.rax;
 #elif defined(__i386__)
-	return context->regs.orig_eax;
+	return context->regs.eax;
 #else
 	return -1;
 #endif
@@ -146,10 +146,10 @@ char const * platform_get_syscall(pid_t pid, struct user * context)
 		context = &c;
 	}
 #if defined(__amd64__)
-	res = context->regs.orig_rax;
+	res = context->regs.rax;
 	res &= 0xffffffff;
 #elif defined(__i386__)
-	res = context->regs.orig_eax;
+	res = context->regs.eax;
 #else
 	res = -1;
 #endif
@@ -172,19 +172,19 @@ void platform_print_registers(pid_t pid, struct user * context)
 		context = &c;
 	}
 # if defined(__amd64__)
-	fprintf(stderr, "rax: 0x%016lx\n", context->regs.orig_rax);
-	fprintf(stderr, "rcx: 0x%016lx\n", context->regs.orig_rcx);
-	fprintf(stderr, "rdx: 0x%016lx\n", context->regs.orig_rdx);
-	fprintf(stderr, "rbx: 0x%016lx\n", context->regs.orig_rbx);
-	fprintf(stderr, "rsi: 0x%016lx\n", context->regs.orig_rsi);
-	fprintf(stderr, "rdi: 0x%016lx\n", context->regs.orig_rdi);
+	fprintf(stderr, "rax: 0x%016lx\n", context->regs.rax);
+	fprintf(stderr, "rcx: 0x%016lx\n", context->regs.rcx);
+	fprintf(stderr, "rdx: 0x%016lx\n", context->regs.rdx);
+	fprintf(stderr, "rbx: 0x%016lx\n", context->regs.rbx);
+	fprintf(stderr, "rsi: 0x%016lx\n", context->regs.rsi);
+	fprintf(stderr, "rdi: 0x%016lx\n", context->regs.rdi);
 # elif defined(__i386__)
-	fprintf(stderr, "eax: 0x%08lx\n", context->regs.orig_eax);
-	fprintf(stderr, "ecx: 0x%08lx\n", context->regs.orig_ecx);
-	fprintf(stderr, "edx: 0x%08lx\n", context->regs.orig_edx);
-	fprintf(stderr, "ebx: 0x%08lx\n", context->regs.orig_ebx);
-	fprintf(stderr, "esi: 0x%08lx\n", context->regs.orig_esi);
-	fprintf(stderr, "edi: 0x%08lx\n", context->regs.orig_edi);
+	fprintf(stderr, "eax: 0x%08lx\n", context->regs.eax);
+	fprintf(stderr, "ecx: 0x%08lx\n", context->regs.ecx);
+	fprintf(stderr, "edx: 0x%08lx\n", context->regs.edx);
+	fprintf(stderr, "ebx: 0x%08lx\n", context->regs.ebx);
+	fprintf(stderr, "esi: 0x%08lx\n", context->regs.esi);
+	fprintf(stderr, "edi: 0x%08lx\n", context->regs.edi);
 # endif
 }
 #endif /* __NetBSD__ */

@@ -32,20 +32,20 @@ struct user
 
 /* constants */
 #  if defined(__amd64__)
-#   define orig_rax		r_rax
-#   define orig_rcx		r_rcx
-#   define orig_rbx		r_rbx
-#   define orig_rdx		r_rdx
-#   define orig_rsi		r_rsi
-#   define orig_rdi		r_rdi
-#   define orig_r10		r_r10
+#   define rax		r_rax
+#   define rcx		r_rcx
+#   define rbx		r_rbx
+#   define rdx		r_rdx
+#   define rsi		r_rsi
+#   define rdi		r_rdi
+#   define r10		r_r10
 #  elif defined(__i386__)
-#   define orig_eax		r_eax
-#   define orig_ecx		r_ecx
-#   define orig_ebx		r_ebx
-#   define orig_edx		r_edx
-#   define orig_esi		r_esi
-#   define orig_edi		r_edi
+#   define eax		r_eax
+#   define ecx		r_ecx
+#   define ebx		r_ebx
+#   define edx		r_edx
+#   define esi		r_esi
+#   define edi		r_edi
 #  endif
 
 # endif /* __FreeBSD__ */

@@ -19,6 +19,7 @@
 # define STRACE_LINUX_H
 
 # if defined(__linux__)
+#  include <sys/ptrace.h>
 #  include <sys/user.h>
 #  include <asm/unistd.h>
 

@@ -37,20 +37,20 @@ struct user
 
 /* constants */
 #  if defined(__amd64__)
-#   define orig_rax		regs[_REG_RAX]
-#   define orig_rcx		regs[_REG_RCX]
-#   define orig_rbx		regs[_REG_RBX]
-#   define orig_rdx		regs[_REG_RDX]
-#   define orig_rsi		regs[_REG_RSI]
-#   define orig_rdi		regs[_REG_RDI]
-#   define orig_r10		regs[_REG_R10]
+#   define rax		regs[_REG_RAX]
+#   define rcx		regs[_REG_RCX]
+#   define rbx		regs[_REG_RBX]
+#   define rdx		regs[_REG_RDX]
+#   define rsi		regs[_REG_RSI]
+#   define rdi		regs[_REG_RDI]
+#   define r10		regs[_REG_R10]
 #  elif defined(__i386__)
-#   define orig_eax		r_eax
-#   define orig_ecx		r_ecx
-#   define orig_ebx		r_ebx
-#   define orig_edx		r_edx
-#   define orig_esi		r_esi
-#   define orig_edi		r_edi
+#   define eax		r_eax
+#   define ecx		r_ecx
+#   define ebx		r_ebx
+#   define edx		r_edx
+#   define esi		r_esi
+#   define edi		r_edi
 #  endif
 
 # endif /* __NetBSD__ */
