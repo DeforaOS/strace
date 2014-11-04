@@ -1,4 +1,5 @@
-TARGETS	= strace
+TARGETS	= $(OBJDIR)strace
+OBJDIR	=
 PREFIX	= /usr/local
 DESTDIR	=
 BINDIR	= $(PREFIX)/bin
@@ -16,27 +17,27 @@ INSTALL	= install
 
 all: $(TARGETS)
 
-strace_OBJS = platform/freebsd.o platform/linux.o platform/netbsd.o strace.o main.o
+strace_OBJS = $(OBJDIR)platform/freebsd.o $(OBJDIR)platform/linux.o $(OBJDIR)platform/netbsd.o $(OBJDIR)strace.o $(OBJDIR)main.o
 strace_CFLAGS = $(CPPFLAGSF) $(CPPFLAGS) $(CFLAGSF) $(CFLAGS)
 strace_LDFLAGS = $(LDFLAGSF) $(LDFLAGS)
 
-strace: $(strace_OBJS)
-	$(CC) -o strace $(strace_OBJS) $(strace_LDFLAGS)
+$(OBJDIR)strace: $(strace_OBJS)
+	$(CC) -o $(OBJDIR)strace $(strace_OBJS) $(strace_LDFLAGS)
 
-platform/freebsd.o: platform/freebsd.c platform/freebsd.h platform.h
-	$(CC) $(strace_CFLAGS) -o platform/freebsd.o -c platform/freebsd.c
+$(OBJDIR)platform/freebsd.o: platform/freebsd.c platform/freebsd.h platform.h
+	$(CC) $(strace_CFLAGS) -o $(OBJDIR)platform/freebsd.o -c platform/freebsd.c
 
-platform/linux.o: platform/linux.c platform/linux.h platform.h
-	$(CC) $(strace_CFLAGS) -o platform/linux.o -c platform/linux.c
+$(OBJDIR)platform/linux.o: platform/linux.c platform/linux.h platform.h
+	$(CC) $(strace_CFLAGS) -o $(OBJDIR)platform/linux.o -c platform/linux.c
 
-platform/netbsd.o: platform/netbsd.c platform/netbsd.h platform.h
-	$(CC) $(strace_CFLAGS) -o platform/netbsd.o -c platform/netbsd.c
+$(OBJDIR)platform/netbsd.o: platform/netbsd.c platform/netbsd.h platform.h
+	$(CC) $(strace_CFLAGS) -o $(OBJDIR)platform/netbsd.o -c platform/netbsd.c
 
-strace.o: strace.c platform.h strace.h ../config.h
-	$(CC) $(strace_CFLAGS) -c strace.c
+$(OBJDIR)strace.o: strace.c platform.h strace.h ../config.h
+	$(CC) $(strace_CFLAGS) -o $(OBJDIR)strace.o -c strace.c
 
-main.o: main.c strace.h ../config.h
-	$(CC) $(strace_CFLAGS) -c main.c
+$(OBJDIR)main.o: main.c strace.h ../config.h
+	$(CC) $(strace_CFLAGS) -o $(OBJDIR)main.o -c main.c
 
 clean:
 	$(RM) -- $(strace_OBJS)
@@ -46,7 +47,7 @@ distclean: clean
 
 install: $(TARGETS)
 	$(MKDIR) $(DESTDIR)$(BINDIR)
-	$(INSTALL) -m 0755 strace $(DESTDIR)$(BINDIR)/strace
+	$(INSTALL) -m 0755 $(OBJDIR)strace $(DESTDIR)$(BINDIR)/strace
 
 uninstall:
 	$(RM) -- $(DESTDIR)$(BINDIR)/strace
