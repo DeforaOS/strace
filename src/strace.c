@@ -21,6 +21,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
+#include <errno.h>
 #include "platform.h"
 #include "strace.h"
 #include "../config.h"
@@ -60,11 +61,19 @@ int strace(char * argv[])
 
 static int _strace_child(char * argv[])
 {
-	/* child */
-	ptrace(PT_TRACE_ME, -1, NULL, (ptrace_data_t)0);
-	execvp(argv[0], argv);
-	_strace_error(argv[0], 1);
-	_exit(127);
+	errno = 0;
+	if(ptrace(PT_TRACE_ME, -1, NULL, (ptrace_data_t)0) == -1
+			&& errno != 0)
+	{
+		_strace_error("ptrace", 1);
+		_exit(125);
+	}
+	else
+	{
+		execvp(argv[0], argv);
+		_strace_error(argv[0], 1);
+		_exit(127);
+	}
 	return 0;
 }
 
