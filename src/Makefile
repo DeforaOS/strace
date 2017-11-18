@@ -1,4 +1,4 @@
-TARGETS	= $(OBJDIR)strace
+TARGETS	= $(OBJDIR)strace$(EXEEXT)
 OBJDIR	=
 PREFIX	= /usr/local
 DESTDIR	=
@@ -9,6 +9,7 @@ CPPFLAGSF=
 CPPFLAGS=
 CFLAGSF	= -W
 CFLAGS	= -Wall -g -O2 -pedantic
+EXEEXT	=
 RM	= rm -f
 LN	= ln -f
 MKDIR	= mkdir -m 0755 -p
@@ -21,8 +22,8 @@ strace_OBJS = $(OBJDIR)platform/freebsd.o $(OBJDIR)platform/linux.o $(OBJDIR)pla
 strace_CFLAGS = $(CPPFLAGSF) $(CPPFLAGS) $(CFLAGSF) $(CFLAGS)
 strace_LDFLAGS = $(LDFLAGSF) $(LDFLAGS)
 
-$(OBJDIR)strace: $(strace_OBJS)
-	$(CC) -o $(OBJDIR)strace $(strace_OBJS) $(strace_LDFLAGS)
+$(OBJDIR)strace$(EXEEXT): $(strace_OBJS)
+	$(CC) -o $(OBJDIR)strace$(EXEEXT) $(strace_OBJS) $(strace_LDFLAGS)
 
 $(OBJDIR)platform/freebsd.o: platform/freebsd.c platform/freebsd.h platform.h
 	@[ -d "$(OBJDIR)platform" ] || $(MKDIR) -- "$(OBJDIR)platform"
@@ -50,9 +51,9 @@ distclean: clean
 
 install: $(TARGETS)
 	$(MKDIR) $(DESTDIR)$(BINDIR)
-	$(INSTALL) -m 0755 $(OBJDIR)strace $(DESTDIR)$(BINDIR)/strace
+	$(INSTALL) -m 0755 $(OBJDIR)strace$(EXEEXT) $(DESTDIR)$(BINDIR)/strace$(EXEEXT)
 
 uninstall:
-	$(RM) -- $(DESTDIR)$(BINDIR)/strace
+	$(RM) -- $(DESTDIR)$(BINDIR)/strace$(EXEEXT)
 
 .PHONY: all clean distclean install uninstall
