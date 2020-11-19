@@ -67,13 +67,13 @@ long platform_get_result(pid_t pid, struct user * context)
 		platform_get_registers(pid, &c);
 		context = &c;
 	}
-#if defined(__amd64__)
+# if defined(__amd64__)
 	return context->regs.rax;
-#elif defined(__i386__)
+# elif defined(__i386__)
 	return context->regs.eax;
-#else
+# else
 	return -1;
-#endif
+# endif
 }
 
 
@@ -90,14 +90,14 @@ char const * platform_get_syscall(pid_t pid, struct user * context)
 		platform_get_registers(pid, &c);
 		context = &c;
 	}
-#if defined(__amd64__)
+# if defined(__amd64__)
 	res = context->regs.rax;
 	res &= 0xffffffff;
-#elif defined(__i386__)
+# elif defined(__i386__)
 	res = context->regs.eax;
-#else
+# else
 	res = -1;
-#endif
+# endif
 	if(res < size && stracecall[res] != NULL)
 		return stracecall[res];
 	snprintf(buf, sizeof(buf), "%s%lx", "syscall_", res);
