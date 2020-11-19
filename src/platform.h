@@ -18,6 +18,7 @@
 #ifndef STRACE_PLATFORM_H
 # define STRACE_PLATFORM_H
 
+# include <sys/types.h>
 # include "platform/freebsd.h"
 # include "platform/linux.h"
 # include "platform/netbsd.h"
