@@ -117,12 +117,12 @@ void platform_print_registers(pid_t pid, struct user * context)
 		context = &c;
 	}
 # if defined(__amd64__)
-	fprintf(stderr, "rax: 0x%016lx\n", context->regs.rax);
-	fprintf(stderr, "rcx: 0x%016lx\n", context->regs.rcx);
-	fprintf(stderr, "rdx: 0x%016lx\n", context->regs.rdx);
-	fprintf(stderr, "rbx: 0x%016lx\n", context->regs.rbx);
-	fprintf(stderr, "rsi: 0x%016lx\n", context->regs.rsi);
-	fprintf(stderr, "rdi: 0x%016lx\n", context->regs.rdi);
+	fprintf(stderr, "rax: 0x%016llx\n", context->regs.rax);
+	fprintf(stderr, "rcx: 0x%016llx\n", context->regs.rcx);
+	fprintf(stderr, "rdx: 0x%016llx\n", context->regs.rdx);
+	fprintf(stderr, "rbx: 0x%016llx\n", context->regs.rbx);
+	fprintf(stderr, "rsi: 0x%016llx\n", context->regs.rsi);
+	fprintf(stderr, "rdi: 0x%016llx\n", context->regs.rdi);
 # elif defined(__i386__)
 	fprintf(stderr, "eax: 0x%08lx\n", context->regs.eax);
 	fprintf(stderr, "ecx: 0x%08lx\n", context->regs.ecx);
